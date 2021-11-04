@@ -5,13 +5,14 @@ const middlewares = jsonServer.defaults()
 const cors = require("./cors")
 const init = require("./apis")
 const walk = require("./walk")
-const mockDir = './mock/apis'; 
-
+const path = require('path')
+const mockDir = path.join(process.cwd(), "mock", "apis")
+const port = 3004
 
 function startServer() {
     walk(mockDir, (error, result) => {
         if(error){
-            console.error("error"+error); 
+            console.error(error); 
         }else{
             let apis = init(result)
             server.use(cors);
@@ -19,8 +20,8 @@ function startServer() {
             server.use(middlewares);
             server.use(apis.middleware);
             server.use(apis.db);
-            server.listen(3000, function () {
-                console.log('JSON Server is running on 3004');
+            server.listen(port, function () {
+                console.log('JSON Server is running on ' + port);
             });
             
         }
